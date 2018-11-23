@@ -1,7 +1,6 @@
 create database test;
 use test;
 
-
 CREATE TABLE students (
 	id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(255) NOT NULL,
@@ -26,6 +25,14 @@ CREATE TABLE activities (
 	id INT AUTO_INCREMENT PRIMARY KEY,
     activity_name VARCHAR(255) NOT NULL,
     activity_grade INT
+);
+
+CREATE TABLE grades (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    grade INT,
+    section_id INT,
+    FOREIGN KEY (section_id)
+        REFERENCES sections(id)
 );
 
 CREATE TABLE stud_sec_junc (
@@ -505,6 +512,110 @@ VALUES
 	('Project Management', 1)
 ;
 
+INSERT INTO grades(grade, section_id)
+VALUES
+	(85, 90),
+	(97, 27),
+	(99, 44),
+	(60, 84),
+	(81, 37),
+	(70, 73),
+	(92, 26),
+	(74, 2),
+	(100, 93),
+	(95, 45),
+	(77, 67),
+	(83, 30),
+	(67, 90),
+	(88, 6),
+	(95, 69),
+	(82, 91),
+	(62, 1),
+	(83, 47),
+	(76, 75),
+	(78, 76),
+	(81, 16),
+	(90, 64),
+	(85, 32),
+	(71, 67),
+	(81, 73),
+	(92, 70),
+	(48, 23),
+	(71, 87),
+	(89, 52),
+	(96, 14),
+	(63, 60),
+	(92, 58),
+	(72, 1),
+	(66, 31),
+	(73, 65),
+	(100, 76),
+	(94, 75),
+	(60, 81),
+	(61, 63),
+	(83, 17),
+	(69, 22),
+	(66, 51),
+	(80, 77),
+	(70, 58),
+	(65, 44),
+	(72, 52),
+	(65, 84),
+	(61, 38),
+	(90, 74),
+	(87, 52),
+	(93, 70),
+	(90, 94),
+	(63, 80),
+	(80, 28),
+	(76, 65),
+	(84, 19),
+	(74, 34),
+	(97, 70),
+	(69, 68),
+	(91, 56),
+	(61, 90),
+	(65, 23),
+	(81, 15),
+	(69, 18),
+	(65, 97),
+	(77, 3),
+	(98, 82),
+	(92, 21),
+	(63, 48),
+	(85, 30),
+	(69, 20),
+	(85, 91),
+	(79, 79),
+	(79, 26),
+	(86, 47),
+	(91, 57),
+	(79, 65),
+	(65, 95),
+	(72, 53),
+	(85, 67),
+	(66, 95),
+	(69, 34),
+	(89, 76),
+	(71, 69),
+	(82, 25),
+	(78, 72),
+	(63, 45),
+	(97, 40),
+	(91, 95),
+	(74, 77),
+	(62, 36),
+	(67, 45),
+	(63, 27),
+	(96, 43),
+	(72, 96),
+	(86, 25),
+	(81, 32),
+	(73, 17),
+	(82, 21),
+	(66, 37)
+;
+
 INSERT INTO stud_sec_junc(student_id, section_id)
 VALUES
 	(17, 46),
@@ -717,3 +828,4 @@ select * from students;
 select * from professors;
 select * from sections;
 select * from activities;
+select * from grades;
