@@ -823,3 +823,24 @@ VALUES
 	(7, 92),
 	(45, 91)
 ;
+
+select * from students;
+select * from grades;
+select * from activities;
+select * from sections;
+select * from professors;
+select * from stud_sec_junc;
+select * from stud_act_junc;
+
+select count(y.first_name) as 'number of students', y.section_id, subject
+from sections 
+left join 
+(select first_name, last_name, students.id ,section_id 
+from students 
+left join stud_sec_junc on students.id = stud_sec_junc.student_id 
+where section_id is not Null )  as y 
+on sections.id = section_id 
+where section_id is not NULL 
+group by section_id;
+
+
