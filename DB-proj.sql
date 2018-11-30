@@ -27,13 +27,6 @@ CREATE TABLE activities (
     activity_grade INT
 );
 
-CREATE TABLE final_grades (
-	id INT AUTO_INCREMENT PRIMARY KEY,
-    grade INT,
-    student_sec_junc_id INT,
-    FOREIGN KEY (student_sec_junc_id)
-        REFERENCES stud_sec_junc(id)
-);
 
 CREATE TABLE stud_sec_junc (
 	id INT AUTO_INCREMENT PRIMARY KEY,
@@ -44,6 +37,16 @@ CREATE TABLE stud_sec_junc (
     FOREIGN KEY (section_id)
         REFERENCES sections(id)    
 );
+
+CREATE TABLE final_grades (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    grade INT,
+    student_sec_junc_id INT,
+    FOREIGN KEY (student_sec_junc_id)
+        REFERENCES stud_sec_junc(id)
+);
+
+
 
 CREATE TABLE stud_act_junc (
 	id INT AUTO_INCREMENT PRIMARY KEY,
@@ -792,7 +795,7 @@ VALUES
 	(98, 69),
 	(92, 40),
 	(63, 3),
-	(85, 95,
+	(85, 95),
 	(69, 100),
 	(85, 67),
 	(79, 97),
@@ -826,12 +829,12 @@ VALUES
 ;
 
 select * from students;
-select * from grades;
 select * from activities;
 select * from sections;
 select * from professors;
 select * from stud_sec_junc;
 select * from stud_act_junc;
+select * from final_grades;
 
 select count(y.first_name) as 'number of students', y.section_id, subject
 from sections 
@@ -844,4 +847,17 @@ on sections.id = section_id
 where section_id is not NULL 
 group by section_id;
 
+
+select grade_id, grade, first_name, last_name , subject
+from sections
+left join
+(select grade_id, student_id, section_id, grade, first_name, last_name
+from students
+left join
+(select final_grades.id as grade_id, student_id, section_id, grade from stud_sec_junc
+left join final_grades on   stud_sec_junc.id  = final_grades.student_sec_junc_id ) as x
+on students.id = student_id
+where grade_id is not NULL ) as y
+ on section_id = sections.id
+ where grade_id is not NULL ;
 
