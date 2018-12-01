@@ -836,6 +836,12 @@ select * from stud_sec_junc;
 select * from stud_act_junc;
 select * from final_grades;
 
+
+
+
+DELIMITER $$
+create procedure GetNumberOfStudents() 
+begin
 select count(y.first_name) as 'number of students', y.section_id, subject
 from sections 
 left join 
@@ -846,8 +852,14 @@ where section_id is not Null )  as y
 on sections.id = section_id 
 where section_id is not NULL 
 group by section_id;
+end $$
+DELIMITER ;
 
+call GetNumberOfStudents();
 
+DELIMITER $$
+create procedure GetGradeOfStudents() 
+begin
 select grade_id, grade, first_name, last_name , subject
 from sections
 left join
@@ -860,4 +872,75 @@ on students.id = student_id
 where grade_id is not NULL ) as y
  on section_id = sections.id
  where grade_id is not NULL ;
+end $$
+DELIMITER ;
+
+
+call GetGradeOfStudents();
+
+
+DELIMITER $$
+create procedure GetGradeHigherThan(in x int) 
+begin
+select count(grade_id)
+from sections
+left join
+(select grade_id, student_id, section_id, grade, first_name, last_name
+from students
+left join
+(select final_grades.id as grade_id, student_id, section_id, grade from stud_sec_junc
+left join final_grades on   stud_sec_junc.id  = final_grades.student_sec_junc_id ) as x
+on students.id = student_id
+where grade_id is not NULL ) as y
+ on section_id = sections.id
+ where grade_id is not NULL  and  grade > x;
+end $$
+DELIMITER ;
+
+call GetGradeHigherThan(90);
+
+DELIMITER $$
+create procedure GetPercentageHigherThan(in x float, out count float) 
+begin
+declare countOfGreater float;
+declare totalStudents float;
+
+select count(grade_id) as z
+from sections
+left join
+(select grade_id, student_id, section_id, grade, first_name, last_name
+from students
+left join
+(select final_grades.id as grade_id, student_id, section_id, grade from stud_sec_junc
+left join final_grades on   stud_sec_junc.id  = final_grades.student_sec_junc_id ) as x
+on students.id = student_id
+where grade_id is not NULL ) as y
+ on section_id = sections.id
+ where grade_id is not NULL  and  grade > x
+ into countOfGreater;
+ 
+ select count(first_name)
+from sections
+left join
+(select grade_id, student_id, section_id, grade, first_name, last_name
+from students
+left join
+(select final_grades.id as grade_id, student_id, section_id, grade from stud_sec_junc
+left join final_grades on   stud_sec_junc.id  = final_grades.student_sec_junc_id ) as x
+on students.id = student_id
+where grade_id is not NULL ) as y
+ on section_id = sections.id
+ into totalStudents;
+ 
+ 
+ set count = (countOfGreater / totalStudents) * 100;
+ 
+
+end $$
+DELIMITER ;
+
+drop procedure GetPercentageHigherThan;
+call GetPercentageHigherThan(90, @count);
+select @count;
+
 
