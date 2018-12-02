@@ -27,7 +27,6 @@ CREATE TABLE activities (
     activity_grade INT
 );
 
-
 CREATE TABLE stud_sec_junc (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	student_id INT,
@@ -45,8 +44,6 @@ CREATE TABLE final_grades (
     FOREIGN KEY (student_sec_junc_id)
         REFERENCES stud_sec_junc(id)
 );
-
-
 
 CREATE TABLE stud_act_junc (
 	id INT AUTO_INCREMENT PRIMARY KEY,
@@ -944,3 +941,55 @@ call GetPercentageHigherThan(90, @count);
 select @count;
 
 
+DELIMITER $$
+create procedure CreateStudent(in fn VARCHAR(50), in ln VARCHAR(56)) 
+begin
+INSERT INTO students(first_name, last_name)
+VALUES
+	(fn, y);
+
+SELECT id
+FROM students
+WHERE (first_name like fn && last_name like ln);
+
+end $$
+DELIMITER ;
+
+call CreateStudent(James, Angelo);
+
+DELIMITER $$
+create procedure ReadStudent(in id int)
+begin
+SELECT id
+FROM students
+WHERE id = this.id
+
+end $$
+DELIMITER;
+
+call ReadStudent(69);
+
+DELIMITER $$
+create procedure UpdateStudent(in id int, in fn VARCHAR(50), in ln VARCHAR(56))
+begin
+UPDATE students
+SET
+first_name = fn
+last_name = ln
+WHERE id = this.id;
+
+end $$
+DELIMITER;
+
+call UpdateStudent(69, Mr., Pogi)
+
+DELIMITER $$
+create procedure DeleteStudent(in id int)
+begin
+DELETE FROM students
+WHERE id = this.id
+
+end $$
+DELIMITER;
+
+call DeleteStudent(69);
