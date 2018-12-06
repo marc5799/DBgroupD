@@ -940,56 +940,123 @@ drop procedure GetPercentageHigherThan;
 call GetPercentageHigherThan(90, @count);
 select @count;
 
-
+CREATE:
 DELIMITER $$
 create procedure CreateStudent(in fn VARCHAR(50), in ln VARCHAR(56)) 
 begin
 INSERT INTO students(first_name, last_name)
-VALUES
-	(fn, y);
+VALUES (fn, ln);
 
 SELECT id
 FROM students
 WHERE (first_name like fn && last_name like ln);
 
+
 end $$
 DELIMITER ;
 
-call CreateStudent(James, Angelo);
 
+call CreateStudent('James' , 'Angelo');
+
+READ:
 DELIMITER $$
-create procedure ReadStudent(in id int)
+create procedure ReadStudent(in x int)
 begin
-SELECT id
+SELECT *
 FROM students
-WHERE id = this.id
+WHERE id = x;
 
 end $$
-DELIMITER;
+DELIMITER ;
 
-call ReadStudent(69);
+call ReadStudent(103);
 
+UPDATE:
 DELIMITER $$
-create procedure UpdateStudent(in id int, in fn VARCHAR(50), in ln VARCHAR(56))
+create procedure UpdateStudent(in x int, in fn VARCHAR(50), in ln VARCHAR(56))
 begin
 UPDATE students
 SET
-first_name = fn
+first_name = fn , 
 last_name = ln
-WHERE id = this.id;
+WHERE id = x;
 
 end $$
-DELIMITER;
+DELIMITER ;
 
-call UpdateStudent(69, Mr., Pogi)
+call UpdateStudent(103, 'Mr.', 'Pogi');
 
+DELETE:
 DELIMITER $$
-create procedure DeleteStudent(in id int)
+create procedure DeleteStudent(in x int)
 begin
 DELETE FROM students
-WHERE id = this.id
+WHERE id = x;
 
 end $$
-DELIMITER;
+DELIMITER ;
 
-call DeleteStudent(69);
+select * from students;
+
+call DeleteStudent(103);
+
+CREATE:
+DELIMITER $$
+create procedure CreateProfessor(in fn VARCHAR(50), in ln VARCHAR(56)) 
+begin
+INSERT INTO professors(first_name, last_name)
+VALUES (fn, ln);
+
+SELECT id
+FROM professors
+WHERE (prof_first_name like fn && prof_last_name like ln);
+
+
+end $$
+DELIMITER ;
+
+
+call CreateProfessor('Raf' , 'Baluyot');
+
+READ:
+DELIMITER $$
+create procedure ReadProfessor(in x int)
+begin
+SELECT *
+FROM professors
+WHERE id = x;
+
+end $$
+DELIMITER ;
+
+call ReadProfessor(103);
+
+UPDATE:
+DELIMITER $$
+create procedure UpdateProfessor(in x int, in fn VARCHAR(50), in ln VARCHAR(56))
+begin
+UPDATE professors
+SET
+prof_first_name = fn , 
+prof_last_name = ln
+WHERE id = x;
+
+end $$
+DELIMITER ;
+
+call UpdateProfessor(103, 'Mr.', 'Pogi');
+
+DELETE:
+DELIMITER $$
+create procedure DeleteProfessor(in x int)
+begin
+DELETE FROM professors
+WHERE id = x;
+
+end $$
+DELIMITER ;
+
+select * from professors;
+
+call DeleteProfessor(103);
+
