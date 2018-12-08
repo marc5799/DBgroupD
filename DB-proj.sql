@@ -969,7 +969,7 @@ WHERE id = x;
 end $$
 DELIMITER ;
 
-call ReadStudent(103);
+call ReadStudent(101);
 
 UPDATE:
 DELIMITER $$
@@ -984,7 +984,7 @@ WHERE id = x;
 end $$
 DELIMITER ;
 
-call UpdateStudent(103, 'Mr.', 'Pogi');
+call UpdateStudent(101, 'Mr.', 'Pogi');
 
 DELETE:
 DELIMITER $$
@@ -998,7 +998,7 @@ DELIMITER ;
 
 select * from students;
 
-call DeleteStudent(103);
+call DeleteStudent(101);
 
 CREATE:
 DELIMITER $$
@@ -1029,7 +1029,7 @@ WHERE id = x;
 end $$
 DELIMITER ;
 
-call ReadProfessor(103);
+call ReadProfessor(101);
 
 UPDATE:
 DELIMITER $$
@@ -1044,7 +1044,7 @@ WHERE id = x;
 end $$
 DELIMITER ;
 
-call UpdateProfessor(103, 'Mr.', 'Pogi');
+call UpdateProfessor(101, 'Mr.', 'Pogi');
 
 DELETE:
 DELIMITER $$
@@ -1058,5 +1058,124 @@ DELIMITER ;
 
 select * from professors;
 
-call DeleteProfessor(103);
+call DeleteProfessor(101);
 
+CREATE:
+DELIMITER $$
+create procedure CreateActivity(in an VARCHAR(50), in ag int) 
+begin
+INSERT INTO activities(activity_name, activity_grade)
+VALUES
+	(an, ag)
+
+SELECT id
+FROM activities
+WHERE (activity_name like an && activity_grade like g);
+
+
+end $$
+DELIMITER ;
+
+call CreateActivity('seatwork' , 100);
+
+READ:
+DELIMITER $$
+create procedure ReadActivity(in x int)
+begin
+SELECT *
+FROM activities
+WHERE id = x;
+
+end $$
+DELIMITER ;
+
+call ReadActivity(101);
+
+UPDATE:
+DELIMITER $$
+create procedure UpdateActivity(in x int, in an VARCHAR(50), in ag VARCHAR(56))
+begin
+UPDATE activities
+SET
+activity_name = an , 
+activity_grade = ag
+WHERE id = x;
+
+end $$
+DELIMITER ;
+
+call UpdateActivity(101, 'seatwork', 70);
+
+DELETE:
+DELIMITER $$
+create procedure DeleteActivity(in x int)
+begin
+DELETE FROM activities
+WHERE id = x;
+
+end $$
+DELIMITER ;
+
+select * from activities;
+
+call DeleteActivity(101);
+
+CREATE:
+DELIMITER $$
+create procedure CreateSection(in sub VARCHAR(50), in p_id int) 
+begin
+INSERT INTO sections(subject, prof_id)
+VALUES
+	(sub, p_id)
+
+SELECT id
+FROM activities
+WHERE (subject like sub && prof_id like p_id);
+
+
+end $$
+DELIMITER ;
+
+call CreateSection('OT' , 100);
+
+READ:
+DELIMITER $$
+create procedure ReadSection(in x int)
+begin
+SELECT *
+FROM sections
+WHERE id = x;
+
+end $$
+DELIMITER ;
+
+call ReadSection(101);
+
+UPDATE:
+DELIMITER $$
+create procedure UpdateSection(in x int, in sub VARCHAR(50), in p_id VARCHAR(56))
+begin
+UPDATE sections
+SET
+subject = sub , 
+prof_id = p_id
+WHERE id = x;
+
+end $$
+DELIMITER ;
+
+call UpdateSection(101, DB, 70);
+
+DELETE:
+DELIMITER $$
+create procedure DeleteSection(in x int)
+begin
+DELETE FROM sections
+WHERE id = x;
+
+end $$
+DELIMITER ;
+
+select * from sections;
+
+call DeleteSection(101);
