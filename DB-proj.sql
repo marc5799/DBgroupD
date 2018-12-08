@@ -949,7 +949,8 @@ VALUES (fn, ln);
 
 SELECT id
 FROM students
-WHERE (first_name like fn && last_name like ln);
+order by id desc
+limit 1;
 
 
 end $$
@@ -1004,12 +1005,13 @@ CREATE:
 DELIMITER $$
 create procedure CreateProfessor(in fn VARCHAR(50), in ln VARCHAR(56)) 
 begin
-INSERT INTO professors(first_name, last_name)
+INSERT INTO professors(prof_first_name, prof_last_name)
 VALUES (fn, ln);
 
 SELECT id
 FROM professors
-WHERE (prof_first_name like fn && prof_last_name like ln);
+order by id desc
+limit 1;
 
 
 end $$
@@ -1056,7 +1058,6 @@ WHERE id = x;
 end $$
 DELIMITER ;
 
-select * from professors;
 
 call DeleteProfessor(101);
 
@@ -1066,17 +1067,19 @@ create procedure CreateActivity(in an VARCHAR(50), in ag int)
 begin
 INSERT INTO activities(activity_name, activity_grade)
 VALUES
-	(an, ag)
+	(an, ag);
 
 SELECT id
 FROM activities
-WHERE (activity_name like an && activity_grade like g);
+order by id desc
+limit 1;
 
 
 end $$
 DELIMITER ;
 
 call CreateActivity('seatwork' , 100);
+
 
 READ:
 DELIMITER $$
@@ -1089,7 +1092,7 @@ WHERE id = x;
 end $$
 DELIMITER ;
 
-call ReadActivity(101);
+call ReadActivity(146);
 
 UPDATE:
 DELIMITER $$
@@ -1104,7 +1107,7 @@ WHERE id = x;
 end $$
 DELIMITER ;
 
-call UpdateActivity(101, 'seatwork', 70);
+call UpdateActivity(146, 'seatwork', 70);
 
 DELETE:
 DELIMITER $$
@@ -1118,7 +1121,8 @@ DELIMITER ;
 
 select * from activities;
 
-call DeleteActivity(101);
+call DeleteActivity(146);
+
 
 CREATE:
 DELIMITER $$
@@ -1126,11 +1130,12 @@ create procedure CreateSection(in sub VARCHAR(50), in p_id int)
 begin
 INSERT INTO sections(subject, prof_id)
 VALUES
-	(sub, p_id)
+	(sub, p_id);
 
 SELECT id
-FROM activities
-WHERE (subject like sub && prof_id like p_id);
+FROM sections
+order by id desc
+limit 1;
 
 
 end $$
@@ -1164,7 +1169,7 @@ WHERE id = x;
 end $$
 DELIMITER ;
 
-call UpdateSection(101, DB, 70);
+call UpdateSection(103, 'DB', 70);
 
 DELETE:
 DELIMITER $$
@@ -1178,4 +1183,4 @@ DELIMITER ;
 
 select * from sections;
 
-call DeleteSection(101);
+call DeleteSection(103);
