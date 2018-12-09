@@ -1191,21 +1191,21 @@ call DeleteSection(103);
 DELIMITER $$
 CREATE PROCEDURE Get3PerSection()
 	BEGIN
-		DECLARE count INT DEFAULT 1;
+	DECLARE count INT DEFAULT 1;
         DECLARE subjects INT DEFAULT 0;
-		CREATE TEMPORARY TABLE SampTable(first_name VARCHAR(255), last_name VARCHAR(255), subject VARCHAR(255), grade INT);
+	CREATE TEMPORARY TABLE SampTable(first_name VARCHAR(255), last_name VARCHAR(255), subject VARCHAR(255), grade INT);
         SELECT COUNT(sections.id)
         INTO subjects
         FROM sections;
-		REPEAT
-			INSERT INTO SampTable(first_name, last_name, subject, grade)
-			SELECT first_name, last_name, subject, grade
-			FROM stud_sec_junc AS ssj
-			RIGHT JOIN students AS st ON student_id = st.id
-			RIGHT JOIN sections AS sc ON section_id = sc.id
-			RIGHT JOIN final_grades AS fg ON ssj.id = fg.student_sec_junc_id
-			WHERE sc.id = count
-			LIMIT 3;
+	REPEAT
+		INSERT INTO SampTable(first_name, last_name, subject, grade)
+		SELECT first_name, last_name, subject, grade
+		FROM stud_sec_junc AS ssj
+		RIGHT JOIN students AS st ON student_id = st.id
+		RIGHT JOIN sections AS sc ON section_id = sc.id
+		RIGHT JOIN final_grades AS fg ON ssj.id = fg.student_sec_junc_id
+		WHERE sc.id = count
+		LIMIT 3;
         SET count = count + 1;
         UNTIL count = subjects
         END REPEAT;
@@ -1220,5 +1220,59 @@ CALL Get3PerSection();
 DROP PROCEDURE Get3PerSection;
 DROP TEMPORARY TABLE SampTable;
 SELECT * FROM SampTable;
+
+DELIMITER $$
+CREATE PROCEDURE CreateGrade(IN grade INT, IN ss_junc_id INT)
+	BEGIN
+	INSERT INTO final_grades(grade, student_sec_junc_id)
+        VALUES
+		(grade, ss_junc_id);
+	SELECT id
+        FROM final_grades
+        ORDER BY id DESC
+        LIMIT 1;
+    END$$
+DELIMITER ;
+
+DROP PROCEDURE CreateGrade;
+CALL CreateGrade(100,100);
+
+DELIMITER $$
+CREATE PROCEDURE ReadGrade(IN req_id INT)
+	BEGIN
+	SELECT *
+        FROM final_grades
+        WHERE id = req_id;
+    END$$
+DELIMITER ;
+
+DROP PROCEDURE ReadGrade;
+CALL ReadGrade(101);
+
+DELIMITER $$
+CREATE PROCEDURE UpdateGrade(IN req_id INT, IN u_grade INT, IN ss_junc_id INT)
+	BEGIN
+	UPDATE final_grades
+        SET
+		grade = u_grade, student_sec_junc_id = ss_junc_id
+	WHERE id = req_id;
+    END$$
+DELIMITER ;
+
+DROP PROCEDURE UpdateGrade;
+CALL UpdateGrade(101, 95, 95);
+SELECT * FROM final_grades WHERE id = 101;
+
+DELIMITER $$
+CREATE PROCEDURE DeleteGrade(IN req_id INT)
+	BEGIN
+	DELETE
+        FROM final_grades
+        WHERE id = req_id;
+    END$$
+DELIMITER ;
+
+DROP PROCEDURE DeleteGrade;
+CALL DeleteGrade(101);
  
  
