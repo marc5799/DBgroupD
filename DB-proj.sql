@@ -1197,7 +1197,7 @@ CREATE PROCEDURE Get3PerSection()
         SELECT COUNT(sections.id)
         INTO subjects
         FROM sections;
-	REPEAT
+	WHILE count <= subjects DO
 		INSERT INTO SampTable(first_name, last_name, subject, grade)
 		SELECT first_name, last_name, subject, grade
 		FROM stud_sec_junc AS ssj
@@ -1205,10 +1205,10 @@ CREATE PROCEDURE Get3PerSection()
 		RIGHT JOIN sections AS sc ON section_id = sc.id
 		RIGHT JOIN final_grades AS fg ON ssj.id = fg.student_sec_junc_id
 		WHERE sc.id = count
+            	ORDER BY fg.grade DESC
 		LIMIT 3;
         SET count = count + 1;
-        UNTIL count = subjects
-        END REPEAT;
+        END WHILE;
         SELECT *
         FROM SampTable
         ORDER BY subject, grade DESC;
