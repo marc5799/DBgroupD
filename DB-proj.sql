@@ -1189,45 +1189,36 @@ call DeleteSection(103);
 
 
 DELIMITER $$
-create procedure Get3PerSection()
-begin
-	    
-declare sIDcount int;  
-declare sectioncount int;
-set sIDcount = 0;
-
-drop table if exists xyz ;
-create table xyz(id int primary key auto_increment , grade int,section_id int,first_name varchar(50), last_name varchar(50), subject varchar(50)   );    
-
-select max(id) from sections into sectioncount;
-
-while sIDcount < sectioncount
-do
-insert into xyz (first_name, last_name, subject, section_id, grade)
-select   first_name, last_name , subject, section_id, grade
-from sections 
-left join
-(select grade_id, student_id, section_id, grade, first_name, last_name
-from students
-left join
-(select final_grades.id as grade_id, student_id, section_id, grade from stud_sec_junc
-left join final_grades on   stud_sec_junc.id  = final_grades.student_sec_junc_id ) as x
-on students.id = student_id
-where grade_id is not NULL ) as y
- on section_id = sections.id
- where grade_id is not NULL and section_id = sIDcount
- order by section_id,grade desc 
- limit 3;
- 
- set sIDcount =  sIDcount + 1;
- end while;
- 
- select * from xyz;
- 
- end $$
+CREATE PROCEDURE Get3PerSection()
+	BEGIN
+		DECLARE count INT DEFAULT 1;
+        DECLARE subjects INT DEFAULT 0;
+		CREATE TEMPORARY TABLE SampTable(first_name VARCHAR(255), last_name VARCHAR(255), subject VARCHAR(255), grade INT);
+        SELECT COUNT(sections.id)
+        INTO subjects
+        FROM sections;
+		REPEAT
+			INSERT INTO SampTable(first_name, last_name, subject, grade)
+			SELECT first_name, last_name, subject, grade
+			FROM stud_sec_junc AS ssj
+			RIGHT JOIN students AS st ON student_id = st.id
+			RIGHT JOIN sections AS sc ON section_id = sc.id
+			RIGHT JOIN final_grades AS fg ON ssj.id = fg.student_sec_junc_id
+			WHERE sc.id = count
+			LIMIT 3;
+        SET count = count + 1;
+        UNTIL count = subjects
+        END REPEAT;
+        SELECT *
+        FROM SampTable
+        ORDER BY subject, grade DESC;
+        DROP TEMPORARY TABLE SampTable;
+    END$$
 DELIMITER ;
 
- call Get3PerSection();
- drop procedure Get3PerSection;
+CALL Get3PerSection();
+DROP PROCEDURE Get3PerSection;
+DROP TEMPORARY TABLE SampTable;
+SELECT * FROM SampTable;
  
  
